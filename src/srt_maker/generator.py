@@ -7,7 +7,11 @@ from .processor import process_segments
 from .stt import get_stt_processor
 
 
-def generate_srt(input_file: str, stt_service: str = "elevenlabs", processor_configs: Optional[List[str]] = None) -> List[Subtitle]:
+def generate_srt(
+    input_file: str,
+    stt_service: str = "elevenlabs",
+    processor_configs: Optional[List[str]] = None,
+) -> List[Subtitle]:
     """
     Generate SRT subtitles from an input file using the specified STT service.
 
@@ -30,8 +34,12 @@ def generate_srt(input_file: str, stt_service: str = "elevenlabs", processor_con
         segments = process_segments(segments, processor_configs)
 
     # Convert text segments to SRT subtitles
-    return [Subtitle(index=i,
-                     start=timedelta(seconds=segment.start_time),
-                     end=timedelta(seconds=segment.end_time),
-                     content=segment.text)
-            for i, segment in enumerate(segments)]
+    return [
+        Subtitle(
+            index=i,
+            start=timedelta(seconds=segment.start_time),
+            end=timedelta(seconds=segment.end_time),
+            content=segment.text,
+        )
+        for i, segment in enumerate(segments)
+    ]

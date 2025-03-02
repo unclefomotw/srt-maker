@@ -28,9 +28,11 @@ def register_processor(processor_type: str):
     Args:
         processor_type: The type name for the processor
     """
+
     def decorator(cls):
         _processor_registry[processor_type] = cls
         return cls
+
     return decorator
 
 
@@ -58,14 +60,16 @@ def load_processor_from_config(config_path: str) -> Optional[BaseProcessor]:
         An initialized processor instance or None if loading fails
     """
     try:
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             config = yaml.safe_load(f)
 
-        if not config or 'type' not in config:
-            logger.error(f"Invalid processor config in {config_path}: missing 'type' field")
+        if not config or "type" not in config:
+            logger.error(
+                f"Invalid processor config in {config_path}: missing 'type' field"
+            )
             return None
 
-        processor_type = config.pop('type')
+        processor_type = config.pop("type")
         processor_class = get_processor(processor_type)
 
         if not processor_class:
@@ -78,7 +82,9 @@ def load_processor_from_config(config_path: str) -> Optional[BaseProcessor]:
         return None
 
 
-def process_segments(segments: List[TextSegment], processor_configs: List[str]) -> List[TextSegment]:
+def process_segments(
+    segments: List[TextSegment], processor_configs: List[str]
+) -> List[TextSegment]:
     """
     Process text segments using a list of processor configurations.
 
@@ -107,7 +113,8 @@ def _import_processors():
     """Import all processor modules to register them."""
     package_dir = os.path.dirname(__file__)
     for _, module_name, _ in pkgutil.iter_modules([package_dir]):
-        if module_name != 'base':  # Skip the base module
+        if module_name != "base":  # Skip the base module
             importlib.import_module(f"{__name__}.{module_name}")
+
 
 _import_processors()

@@ -56,7 +56,7 @@ def test_max_length_constraint():
     # Creating a string of 30 'a' characters
     char_data = []
     for i in range(30):
-        char_data.append({"text": "a", "start": float(i), "end": float(i+1)})
+        char_data.append({"text": "a", "start": float(i), "end": float(i + 1)})
 
     # Setting max_len to 10 should give us 3 segments
     result = combine_into_segments(char_data, max_len=10)

@@ -31,7 +31,7 @@ def load_prompt_from_file(file_path: str) -> str:
         FileNotFoundError: If the prompt file doesn't exist
     """
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             return f.read().strip()
     except FileNotFoundError:
         logger.error(f"Prompt file not found: {file_path}")
@@ -44,7 +44,12 @@ class OpenAIProcessor(BaseProcessor):
     Processor that uses OpenAI's API to process text segments.
     """
 
-    def __init__(self, prompt: Optional[str] = None, prompt_file: Optional[str] = None, model: str = "openai:gpt-4o-mini"):
+    def __init__(
+        self,
+        prompt: Optional[str] = None,
+        prompt_file: Optional[str] = None,
+        model: str = "openai:gpt-4o-mini",
+    ):
         """
         Initialize the OpenAI processor.
 
@@ -83,12 +88,14 @@ class OpenAIProcessor(BaseProcessor):
         Returns:
             The processed list of TextSegment objects
         """
-        logger.info(f"Processing {len(segments)} segments with OpenAI using {self.source}")
+        logger.info(
+            f"Processing {len(segments)} segments with OpenAI using {self.source}"
+        )
 
         processed_segments = []
 
         for i, segment in enumerate(segments):
-            logger.debug(f"Processing segment {i+1}/{len(segments)}")
+            logger.debug(f"Processing segment {i + 1}/{len(segments)}")
 
             try:
                 # Call OpenAI API through aisuite
@@ -96,8 +103,8 @@ class OpenAIProcessor(BaseProcessor):
                     model=self.model,
                     messages=[
                         {"role": "system", "content": self.system_message},
-                        {"role": "user", "content": segment.text}
-                    ]
+                        {"role": "user", "content": segment.text},
+                    ],
                 )
 
                 # Create a new segment with the processed text
@@ -105,17 +112,17 @@ class OpenAIProcessor(BaseProcessor):
                 if response.choices and response.choices[0].message.content:
                     processed_text = response.choices[0].message.content.strip()
                 else:
-                    logger.warning(f"Empty response for segment {i+1}")
+                    logger.warning(f"Empty response for segment {i + 1}")
 
                 processed_segment = TextSegment(
                     text=processed_text,
                     start_time=segment.start_time,
-                    end_time=segment.end_time
+                    end_time=segment.end_time,
                 )
                 processed_segments.append(processed_segment)
 
             except Exception as e:
-                logger.error(f"Error processing segment {i+1}: {str(e)}")
+                logger.error(f"Error processing segment {i + 1}: {str(e)}")
                 # Keep the original segment in case of error
                 processed_segments.append(segment)
 

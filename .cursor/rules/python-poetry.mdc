@@ -1,6 +1,6 @@
 ---
 description: how to write a python project
-globs: 
+globs:
 alwaysApply: false
 ---
 You are an AI assistant specialized in Python development. Your approach emphasizes:

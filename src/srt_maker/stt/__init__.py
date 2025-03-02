@@ -4,7 +4,8 @@ from srt_maker.model import TextSegment
 
 from . import elevenlabs
 
-__all__ = ['TextSegment', 'get_stt_processor']
+__all__ = ["TextSegment", "get_stt_processor"]
+
 
 # Protocol for STT service processors
 class STTProcessor(Protocol):
@@ -20,18 +21,22 @@ class STTProcessor(Protocol):
         """
         ...
 
+
 # Registry of available STT services
 _STT_PROCESSORS: Dict[str, STTProcessor] = {}
+
 
 # Register the STT processors
 def _register_processors():
     """Register all available STT processors."""
 
     # Register elevenlabs processor
-    _STT_PROCESSORS['elevenlabs'] = elevenlabs.process_file
+    _STT_PROCESSORS["elevenlabs"] = elevenlabs.process_file
+
 
 # Initialize the registry
 _register_processors()
+
 
 def get_stt_processor(service_name: str) -> STTProcessor:
     """
@@ -48,9 +53,12 @@ def get_stt_processor(service_name: str) -> STTProcessor:
     """
     if service_name not in _STT_PROCESSORS:
         available_services = ", ".join(_STT_PROCESSORS.keys())
-        raise ValueError(f"STT service '{service_name}' not available. Choose from: {available_services}")
+        raise ValueError(
+            f"STT service '{service_name}' not available. Choose from: {available_services}"
+        )
 
     return _STT_PROCESSORS[service_name]
+
 
 def register_stt_processor(name: str, processor: STTProcessor) -> None:
     """

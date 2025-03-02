@@ -27,7 +27,7 @@ class TextTransformation:
         replace_pattern: Optional[str] = None,
         replace_with: Optional[str] = None,
         prefix: Optional[str] = None,
-        suffix: Optional[str] = None
+        suffix: Optional[str] = None,
     ):
         """
         Initialize a text transformation.
@@ -49,10 +49,16 @@ class TextTransformation:
 
         # Validate configuration
         if to_upper and to_lower:
-            logger.warning("Both to_upper and to_lower are set to True. to_upper will take precedence.")
+            logger.warning(
+                "Both to_upper and to_lower are set to True. to_upper will take precedence."
+            )
 
-        if (replace_pattern and not replace_with) or (not replace_pattern and replace_with):
-            logger.warning("Both replace_pattern and replace_with must be provided for replacement to work.")
+        if (replace_pattern and not replace_with) or (
+            not replace_pattern and replace_with
+        ):
+            logger.warning(
+                "Both replace_pattern and replace_with must be provided for replacement to work."
+            )
 
     def apply(self, text: str) -> str:
         """
@@ -73,7 +79,9 @@ class TextTransformation:
             processed_text = processed_text.lower()
 
         if self.replace_pattern and self.replace_with is not None:
-            processed_text = re.sub(self.replace_pattern, self.replace_with, processed_text)
+            processed_text = re.sub(
+                self.replace_pattern, self.replace_with, processed_text
+            )
 
         if self.prefix:
             processed_text = f"{self.prefix}{processed_text}"
@@ -104,7 +112,7 @@ class TextProcessor(BaseProcessor):
                 transformation = TextTransformation(**process_config)
                 self.transformations.append(transformation)
             except Exception as e:
-                logger.error(f"Error initializing transformation {i+1}: {str(e)}")
+                logger.error(f"Error initializing transformation {i + 1}: {str(e)}")
 
     def process(self, segments: List[TextSegment]) -> List[TextSegment]:
         """
@@ -116,7 +124,9 @@ class TextProcessor(BaseProcessor):
         Returns:
             The processed list of TextSegment objects
         """
-        logger.info(f"Processing {len(segments)} segments with TextProcessor using {len(self.transformations)} transformations")
+        logger.info(
+            f"Processing {len(segments)} segments with TextProcessor using {len(self.transformations)} transformations"
+        )
 
         processed_segments = []
 
@@ -126,13 +136,13 @@ class TextProcessor(BaseProcessor):
             # Apply each transformation in sequence
             for i, transformation in enumerate(self.transformations):
                 processed_text = transformation.apply(processed_text)
-                logger.debug(f"Applied transformation {i+1} to segment")
+                logger.debug(f"Applied transformation {i + 1} to segment")
 
             # Create a new segment with the processed text
             processed_segment = TextSegment(
                 text=processed_text,
                 start_time=segment.start_time,
-                end_time=segment.end_time
+                end_time=segment.end_time,
             )
             processed_segments.append(processed_segment)
 

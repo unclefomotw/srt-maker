@@ -25,23 +25,26 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
 
     parser.add_argument(
         "input_file",
-        help="Path to the input audio or video file, or an intermediate output from an STT service"
+        help="Path to the input audio or video file, or an intermediate output from an STT service",
     )
     parser.add_argument(
-        "-s", "--stt",
+        "-s",
+        "--stt",
         help="Specify which STT service to generate (default: 'elevenlabs')",
-        default="elevenlabs"
+        default="elevenlabs",
     )
     parser.add_argument(
-        "-o", "--output",
+        "-o",
+        "--output",
         help="Path to the output SRT file (default: input_file.srt)",
-        default=None
+        default=None,
     )
     parser.add_argument(
-        "-p", "--processors",
+        "-p",
+        "--processors",
         help="List of processor configuration files",
         nargs="+",
-        default=None
+        default=None,
     )
 
     return parser.parse_args(args)
@@ -56,13 +59,15 @@ def main(args: Optional[List[str]] = None) -> int:
         logging.info(f"Using STT service: {parsed_args.stt}")
 
         if parsed_args.processors:
-            logging.info(f"Using processor configs: {', '.join(parsed_args.processors)}")
+            logging.info(
+                f"Using processor configs: {', '.join(parsed_args.processors)}"
+            )
 
         # Pass the STT service and processor configs to the generator
         srt_list: List[srt.Subtitle] = generate_srt(
             parsed_args.input_file,
             stt_service=parsed_args.stt,
-            processor_configs=parsed_args.processors
+            processor_configs=parsed_args.processors,
         )
 
         srt_str = srt.compose(srt_list)
@@ -75,7 +80,7 @@ def main(args: Optional[List[str]] = None) -> int:
             print(srt_str)
 
         return 0
-    except Exception as e:
+    except Exception:
         raise
 
 

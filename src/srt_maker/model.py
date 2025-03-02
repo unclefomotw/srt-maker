@@ -11,6 +11,7 @@ class TextSegment:
         start_time (float): Start time in seconds
         end_time (float): End time in seconds
     """
+
     text: str
     start_time: float
     end_time: float

@@ -4,7 +4,9 @@ from typing import Any, Dict, List, Optional
 from ..model import TextSegment
 
 # Define punctuation that indicates natural segment boundaries
-PUNCTUATION = set(['.', '!', '?', ',', ';', ':', '-', '(', ')', '[', ']', '{', '}', '"', '，', '。'])
+PUNCTUATION = set(
+    [".", "!", "?", ",", ";", ":", "-", "(", ")", "[", "]", "{", "}", '"', "，", "。"]
+)
 
 
 def process_file(input_file: str) -> List[TextSegment]:
@@ -18,7 +20,7 @@ def process_file(input_file: str) -> List[TextSegment]:
         List of TextSegment objects
     """
     # Read and parse the input file
-    with open(input_file, 'r') as file:
+    with open(input_file, "r") as file:
         data = json.load(file)
 
     # Extract the words data
@@ -28,9 +30,11 @@ def process_file(input_file: str) -> List[TextSegment]:
     return combine_into_segments(words)
 
 
-def combine_into_segments(char_data: List[Dict[str, Any]],
-                          max_len: int = 40,
-                          punctuation: Optional[set] = None) -> List[TextSegment]:
+def combine_into_segments(
+    char_data: List[Dict[str, Any]],
+    max_len: int = 40,
+    punctuation: Optional[set] = None,
+) -> List[TextSegment]:
     """
     Combines character-level transcript data into meaningful text segments.
 
@@ -62,7 +66,6 @@ def combine_into_segments(char_data: List[Dict[str, Any]],
     # Track the last punctuation position for potential backoff
     last_punct_idx = -1
     last_punct_text = ""
-    last_punct_weight = 0
 
     i = 0
     while i < len(char_data):
@@ -78,27 +81,33 @@ def combine_into_segments(char_data: List[Dict[str, Any]],
                 i += 1  # Move past this punctuation
 
                 # Create segment with the punctuation included
-                segments.append(TextSegment(
-                    text=current_text,
-                    start_time=char_data[start_idx]["start"],
-                    end_time=char_data[i-1]["end"]
-                ))
+                segments.append(
+                    TextSegment(
+                        text=current_text,
+                        start_time=char_data[start_idx]["start"],
+                        end_time=char_data[i - 1]["end"],
+                    )
+                )
             # If we have a punctuation to back off to, use that as the segment boundary
             elif last_punct_idx >= 0:
-                segments.append(TextSegment(
-                    text=last_punct_text,
-                    start_time=char_data[start_idx]["start"],
-                    end_time=char_data[last_punct_idx]["end"]
-                ))
+                segments.append(
+                    TextSegment(
+                        text=last_punct_text,
+                        start_time=char_data[start_idx]["start"],
+                        end_time=char_data[last_punct_idx]["end"],
+                    )
+                )
                 # Start next segment after the punctuation
                 i = last_punct_idx + 1
             else:
                 # No punctuation to back off to, just create segment at max_len
-                segments.append(TextSegment(
-                    text=current_text,
-                    start_time=char_data[start_idx]["start"],
-                    end_time=char_data[i-1]["end"]
-                ))
+                segments.append(
+                    TextSegment(
+                        text=current_text,
+                        start_time=char_data[start_idx]["start"],
+                        end_time=char_data[i - 1]["end"],
+                    )
+                )
 
             # Reset for next segment
             current_text = ""
@@ -111,7 +120,6 @@ def combine_into_segments(char_data: List[Dict[str, Any]],
             start_idx = i if i < len(char_data) else len(char_data) - 1
             last_punct_idx = -1
             last_punct_text = ""
-            last_punct_weight = 0
             continue
 
         # Add character to current segment
@@ -122,16 +130,17 @@ def combine_into_segments(char_data: List[Dict[str, Any]],
         if char in punctuation:
             last_punct_idx = i
             last_punct_text = current_text
-            last_punct_weight = current_weight
 
         i += 1
 
     # Add any remaining text as the final segment
     if current_text:
-        segments.append(TextSegment(
-            text=current_text,
-            start_time=char_data[start_idx]["start"],
-            end_time=char_data[-1]["end"]
-        ))
+        segments.append(
+            TextSegment(
+                text=current_text,
+                start_time=char_data[start_idx]["start"],
+                end_time=char_data[-1]["end"],
+            )
+        )
 
     return segments
