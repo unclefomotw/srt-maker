@@ -5,7 +5,26 @@ from ..model import TextSegment
 
 # Define punctuation that indicates natural segment boundaries
 PUNCTUATION = set(
-    [".", "!", "?", ",", ";", ":", "-", "(", ")", "[", "]", "{", "}", '"', "，", "。"]
+    [
+        ".",
+        "!",
+        "?",
+        ",",
+        ";",
+        ":",
+        "-",
+        "(",
+        ")",
+        "[",
+        "]",
+        "{",
+        "}",
+        '"',
+        "，",
+        "。",
+        "？",
+        "！",
+    ]
 )
 
 
