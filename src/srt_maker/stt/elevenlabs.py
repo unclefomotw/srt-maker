@@ -1,7 +1,7 @@
 import json
 from typing import Any, Dict, List, Optional
 
-from .models import TextSegment
+from ..model import TextSegment
 
 # Define punctuation that indicates natural segment boundaries
 PUNCTUATION = set(['.', '!', '?', ',', ';', ':', '-', '(', ')', '[', ']', '{', '}', '"', '，', '。'])

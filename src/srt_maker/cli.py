@@ -37,6 +37,12 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         help="Path to the output SRT file (default: input_file.srt)",
         default=None
     )
+    parser.add_argument(
+        "-p", "--processors",
+        help="List of processor configuration files",
+        nargs="+",
+        default=None
+    )
 
     return parser.parse_args(args)
 
@@ -49,10 +55,14 @@ def main(args: Optional[List[str]] = None) -> int:
         logging.info(f"Generating SRT for: {parsed_args.input_file}")
         logging.info(f"Using STT service: {parsed_args.stt}")
 
-        # Pass the STT service to the generator
+        if parsed_args.processors:
+            logging.info(f"Using processor configs: {', '.join(parsed_args.processors)}")
+
+        # Pass the STT service and processor configs to the generator
         srt_list: List[srt.Subtitle] = generate_srt(
             parsed_args.input_file,
-            stt_service=parsed_args.stt
+            stt_service=parsed_args.stt,
+            processor_configs=parsed_args.processors
         )
 
         srt_str = srt.compose(srt_list)

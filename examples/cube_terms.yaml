@@ -1,0 +1,6 @@
+type: text
+processes:
+  - replace_pattern: '腳塊'
+    replace_with: '角塊'
+  - replace_pattern: ' prime'
+    replace_with: "'"

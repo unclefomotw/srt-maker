@@ -1,0 +1,5 @@
+type: openai
+model: openai:gpt-4o-mini
+prompt: "Translate the given text to Traditional Chinese.
+  Never output Simplified Chinese.
+  No additional interpretations nor questions; translate as-is."

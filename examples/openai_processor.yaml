@@ -1,0 +1,3 @@
+type: openai
+prompt: "You are a helpful assistant that cleans up and improves subtitle text. Fix grammar, spelling, and remove filler words while maintaining the original meaning."
+model: openai:gpt-4o-mini

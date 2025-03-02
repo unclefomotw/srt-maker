@@ -1,0 +1,19 @@
+type: text
+processes:
+  # First, normalize whitespace
+  - replace_pattern: '\s+'
+    replace_with: ' '
+
+  # Then, remove common filler words
+  - replace_pattern: '\b(um|uh|like|you know)\b\s*'
+    replace_with: ''
+
+  # Convert to lowercase
+  - to_lower: true
+
+  # Add bullet points to each line
+  - prefix: '• '
+
+  # Add a period at the end if missing
+  - replace_pattern: '([^.!?])$'
+    replace_with: '$1.'

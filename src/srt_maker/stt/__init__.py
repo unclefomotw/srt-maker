@@ -1,6 +1,6 @@
 from typing import Dict, List, Protocol
 
-from srt_maker.stt.models import TextSegment
+from srt_maker.model import TextSegment
 
 from . import elevenlabs
 
